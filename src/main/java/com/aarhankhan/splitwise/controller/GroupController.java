@@ -21,7 +21,7 @@ public class GroupController {
 
     @PostMapping("/create")
     public Group createGroup(@RequestBody GroupModel groupModel){
-        System.out.println(groupModel.toString());
+
         return groupService.createGroup(groupModel);
     }
 

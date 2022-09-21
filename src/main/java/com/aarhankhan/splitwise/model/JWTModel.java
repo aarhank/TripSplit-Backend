@@ -5,10 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class UserLogin {
-
-    private String username;
-    private String password;
+@NoArgsConstructor
+public class JWTModel {
+    private String jwtToken;
 }

@@ -7,13 +7,17 @@ import com.aarhankhan.splitwise.model.UserLogin;
 import com.aarhankhan.splitwise.model.UserModel;
 import com.aarhankhan.splitwise.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class UserServiceImp implements UserService{
+public class UserServiceImp implements UserService, UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
@@ -23,14 +27,14 @@ public class UserServiceImp implements UserService{
     @Override
     public User createUser(UserModel userModel) {
         User user = new User();
-        user.setUserMail(userModel.getUserMail());
+
         user.setUserFirstName(userModel.getUserFirstName());
         user.setUserLastName(userModel.getUserLastName());
+        user.setUserName(userModel.getUserName());
         user.setUserPassword(passwordEncoder.encode(userModel.getUserPassword()));
         user.setUserGroups(null);
         user.setRole("USER");
         userRepository.save(user);
-        System.out.println(user.toString());
         return user;
     }
 
@@ -62,10 +66,28 @@ public class UserServiceImp implements UserService{
 
     @Override
     public User userLogin(UserLogin userLogin) {
-        User user = userRepository.findByUserMail(userLogin.getEmail());
+        User user = userRepository.findByUserName(userLogin.getUsername());
+        if(user ==null){
+            return null;
+        }
         if(passwordEncoder.matches(userLogin.getPassword(),user.getUserPassword())){
             return user;
         }
+        return null;
+    }
+
+    @Override
+    public UserDetails loadUserByUserId(Long userId) {
+        return userRepository.findById(userId).get();
+    }
+
+    @Override
+    public User loadUserByUserName(String userName) {
+        return userRepository.findByUserName(userName);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return null;
     }
 }
