@@ -35,7 +35,7 @@ public class UserController {
     private ApplicationEventPublisher publisher;
 
     @PostMapping("/register")
-    public User registerUser(@RequestBody UserModel userModel){
+    public JWTModel registerUser(@RequestBody UserModel userModel){
 
         User user =userService.createUser(userModel);
 
@@ -44,7 +44,9 @@ public class UserController {
                 "url"
         ));
 
-        return user;
+        final String token = jwtUtility.generateToken(user);
+
+        return new JWTModel(token);
     }
     
     @PostMapping("/login")
