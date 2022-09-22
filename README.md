@@ -50,7 +50,7 @@ Frontend : https://tripsplits.netlify.app/register
 
 ## Examples
 
-- ### Twitter
+- ### User
 **Endpoint:**      
 ```user/register```  
 **Request Boddy:**       
